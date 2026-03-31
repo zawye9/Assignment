@@ -34,7 +34,7 @@ resource "aws_db_instance" "mysql" {
   engine                 = "mysql"
   engine_version         = "8.0"
   instance_class         = "db.t3.micro" # Free tier eligible/Cost effective
-  db_name                = "myappdb"
+  db_name                = "webappdb"
   username               = "admin"
   password               = var.db_password 
   

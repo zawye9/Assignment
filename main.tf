@@ -15,17 +15,17 @@ resource "aws_internet_gateway" "igw" {
 # 1. Create a Static Public IP (EIP)
 resource "aws_eip" "nat_eip" {
   domain     = "vpc"
-  depends_on = [aws_internet_gateway.igw] # Best practice to ensure IGW exists first
+  depends_on = [aws_internet_gateway.igw] 
   tags       = { Name = "nat-gateway-eip" }
 }
 
 # 2. Create the NAT Gateway
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat_eip.id
-  subnet_id     = aws_subnet.public[0].id # Placed in the first public subnet
+  subnet_id     = aws_subnet.public[0].id 
   tags          = { Name = "main-nat-gateway" }
 
-  # To ensure proper ordering, it is recommended to add an explicit dependency
+ 
   depends_on = [aws_internet_gateway.igw]
 }
 
@@ -43,7 +43,7 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
   tags = {
    Name                               = "public-subnet"
-  "kubernetes.io/role/elb"           = "1"            # Mandatory for public ALBs
+  "kubernetes.io/role/elb"           = "1"           
   "kubernetes.io/cluster/main-cluster" = "shared"
 }
 }
@@ -56,7 +56,7 @@ resource "aws_subnet" "frontend" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
   tags = {
   Name                               = "private-subnet-frontend"
-  "kubernetes.io/role/internal-elb"  = "1"            # Mandatory for internal ALBs
+  "kubernetes.io/role/internal-elb"  = "1"            
   "kubernetes.io/cluster/main-cluster" = "shared"
 }
 }
@@ -67,10 +67,11 @@ resource "aws_subnet" "backend" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.backend_subnet_cidrs[count.index]
   availability_zone = data.aws_availability_zones.available.names[count.index]
-  tags = { 
-    Name = "private-backend-${count.index + 1}"
-    Tier = "backend"
-  }
+   tags = {
+  Name                               = "private-subnet-backend"
+  "kubernetes.io/role/internal-elb"  = "1"            
+  "kubernetes.io/cluster/main-cluster" = "shared"
+}
 }
 
 # Private RDS
