@@ -128,7 +128,7 @@ resource "aws_eks_addon" "vpc_cni" {
   addon_name   = "vpc-cni"
   
   # Optional: specify a version or let AWS use the default
-  addon_version = "v1.18.1-eksbuild.1" 
+  #addon_version = "v1.18.1-eksbuild.1" 
   
   resolve_conflicts_on_update = "PRESERVE"
 }
@@ -139,7 +139,7 @@ resource "aws_iam_role" "ebs_csi_role" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action = "sts:AssumeWebIdentity"
+      Action = "sts:AssumeRoleWithWebIdentity" 
       Effect = "Allow"
       Principal = {
         Federated = aws_iam_openid_connect_provider.eks.arn
@@ -173,7 +173,7 @@ resource "aws_iam_role" "cloudwatch_observability" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action = "sts:AssumeWebIdentity"
+      Action = "sts:AssumeRoleWithWebIdentity"
       Effect = "Allow"
       Principal = {
         Federated = aws_iam_openid_connect_provider.eks.arn

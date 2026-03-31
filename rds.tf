@@ -7,16 +7,14 @@ resource "aws_db_subnet_group" "main" {
 
 # --- 2. Security Group for RDS ---
 resource "aws_security_group" "rds_sg" {
-  name        = "rds-security-group"
-  description = "Allow inbound traffic from backend nodes"
-  vpc_id      = aws_vpc.main.id
+  name   = "rds-security-group"
+  vpc_id = aws_vpc.main.id
 
-  # Only allow the Backend Node Group to connect to MySQL
   ingress {
-    from_port       = 3306
-    to_port         = 3306
-    protocol        = "tcp"
-    security_groups = [aws_eks_node_group.backend.resources[0].remote_access_security_group_id]
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    security_groups = [aws_eks_cluster.main.vpc_config[0].cluster_security_group_id]
   }
 
   egress {
