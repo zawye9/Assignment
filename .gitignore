@@ -1,0 +1,5 @@
+#ignore
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tf.backup
+.terraform/
